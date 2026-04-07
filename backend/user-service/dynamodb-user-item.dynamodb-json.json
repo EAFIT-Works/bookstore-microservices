@@ -1,0 +1,10 @@
+{
+  "id": { "S": "a1b2c3d4-e5f6-7890-abcd-ef1234567890" },
+  "email": { "S": "jane@example.com" },
+  "firstName": { "S": "Jane" },
+  "lastName": { "S": "Doe" },
+  "balance": { "N": "100" },
+  "passwordHash": {
+    "S": "$2b$10$4JVq04u9hGMMcvv.2/oQ3elzfMQWvy1tQGd1U1o6pR56V4BMVlsgG"
+  }
+}
