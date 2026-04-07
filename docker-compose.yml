@@ -4,15 +4,77 @@ services:
       context: ./backend/book-service
       dockerfile: Dockerfile
     container_name: bookstore_book_service
-    ports:
-      - "3000:3000"
     env_file:
-      - path: book-service.env
+      - path: .env
         required: false
     environment:
       AWS_REGION: ${AWS_REGION:-us-east-1}
       BOOKS_TABLE_NAME: ${BOOKS_TABLE_NAME:-tb_books}
-      NODE_ENV: ${NODE_ENV:-development}
+      NODE_ENV: ${APP_NODE_ENV:-development}
+    networks:
+      - back-tier
+
+  user-service:
+    build:
+      context: ./backend/user-service
+      dockerfile: Dockerfile
+    container_name: bookstore_user_service
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      USERS_TABLE_NAME: ${USERS_TABLE_NAME:-tb_users}
+      NODE_ENV: ${APP_NODE_ENV:-development}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+    networks:
+      - back-tier
+
+  review-service:
+    build:
+      context: ./backend/review-service
+      dockerfile: Dockerfile
+    container_name: bookstore_review_service
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      REVIEWS_TABLE_NAME: ${REVIEWS_TABLE_NAME:-tb_reviews}
+      NODE_ENV: ${APP_NODE_ENV:-development}
+    networks:
+      - back-tier
+
+  order-service:
+    build:
+      context: ./backend/order-service
+      dockerfile: Dockerfile
+    container_name: bookstore_order_service
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      ORDERS_TABLE_NAME: ${ORDERS_TABLE_NAME:-tb_orders}
+      NODE_ENV: ${APP_NODE_ENV:-development}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      USER_SERVICE_URL: ${USER_SERVICE_URL:-http://user-service:3001}
+      BOOK_SERVICE_URL: ${BOOK_SERVICE_URL:-http://book-service:3000}
+    networks:
+      - back-tier
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: bookstore_api_gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - book-service
+      - user-service
+      - review-service
+      - order-service
     networks:
       - back-tier
 
@@ -24,13 +86,10 @@ services:
     ports:
       - "80:80"
     environment:
-      NGINX_PORT: "80"
-      PROXY_PASS: "http://book-service:3000"
-    env_file:
-      - path: frontend.env
-        required: false
+      NGINX_PORT: ${NGINX_PORT:-80}
+      API_GATEWAY_URL: ${API_GATEWAY_URL:-http://api-gateway:8080}
     depends_on:
-      - book-service
+      - api-gateway
     networks:
       - front-tier
       - back-tier

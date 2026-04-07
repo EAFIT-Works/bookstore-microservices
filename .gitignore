@@ -9,7 +9,6 @@ node_modules/
 !*.env.example
 backend.env
 frontend.env
-book-service.env
 *.pem
 *.key
 !*.key.pub
