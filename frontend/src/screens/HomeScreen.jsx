@@ -22,7 +22,7 @@ const HomeScreen = () => {
                 if (!cancelled) {
                     setError(
                         e.response?.data?.message ||
-                            "No se pudieron cargar los libros."
+                            "Could not load books."
                     );
                     setBooks([]);
                 }
@@ -41,9 +41,9 @@ const HomeScreen = () => {
 
             <div className="container my-5">
                 <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
-                    <h2 className="mb-0">Los más vendidos</h2>
+                    <h2 className="mb-0">Bestsellers</h2>
                     <Link to="/books/new">
-                        <Button variant="primary">Nuevo libro</Button>
+                        <Button variant="primary">New book</Button>
                     </Link>
                 </div>
 
@@ -58,8 +58,8 @@ const HomeScreen = () => {
                         {books.length === 0 && !error ? (
                             <Col>
                                 <p className="text-muted">
-                                    No hay libros todavía.{" "}
-                                    <Link to="/books/new">Crea el primero</Link>.
+                                    No books yet.{" "}
+                                    <Link to="/books/new">Add the first one</Link>.
                                 </p>
                             </Col>
                         ) : (

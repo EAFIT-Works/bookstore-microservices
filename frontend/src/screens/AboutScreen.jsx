@@ -1,16 +1,15 @@
-import React from 'react';
+import React from "react";
 
 const AboutScreen = () => {
     return (
         <div>
             <p>
-                Este sitio web esta concebido como una tienda virtual de obras literarias, la cual permite
-                obtener el listado de obras disponibles para reservar y/o comprar. El sitio fue desarrollado 
-                para que los usuarios pueda obtener información útil acerca de...   
+                MyBookStore is a demo bookstore: browse titles, read reviews, and
+                check out using account balance. Built as a microservices
+                learning project.
             </p>
         </div>
+    );
+};
 
-    )
-}
-
-export default AboutScreen
+export default AboutScreen;

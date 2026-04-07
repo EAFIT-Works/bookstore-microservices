@@ -12,6 +12,18 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
+      '/api/users': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+      '/api/reviews': {
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+      },
+      '/api/orders': {
+        target: 'http://localhost:3003',
+        changeOrigin: true,
+      },
     },
   },
 })

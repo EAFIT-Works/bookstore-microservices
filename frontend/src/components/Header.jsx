@@ -25,19 +25,30 @@ const Header = () => {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
                             <LinkContainer to="/books/new">
-                                <Nav.Link>Nuevo libro</Nav.Link>
+                                <Nav.Link>New book</Nav.Link>
                             </LinkContainer>
                             {!user ? (
-                                <LinkContainer to="/login">
-                                    <Nav.Link>Iniciar sesión</Nav.Link>
-                                </LinkContainer>
+                                <>
+                                    <LinkContainer to="/login">
+                                        <Nav.Link>Sign in</Nav.Link>
+                                    </LinkContainer>
+                                    <LinkContainer to="/register">
+                                        <Nav.Link>Register</Nav.Link>
+                                    </LinkContainer>
+                                </>
                             ) : (
-                                <NavDropdown title={user.firstName + " " + user.lastName} id="user-dropdown">
+                                <NavDropdown
+                                    title={`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || user.email}
+                                    id="user-dropdown"
+                                >
                                     <LinkContainer to="/profile">
-                                        <NavDropdown.Item>Mi perfil </NavDropdown.Item>
+                                        <NavDropdown.Item>Profile</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="/orders">
+                                        <NavDropdown.Item>Orders</NavDropdown.Item>
                                     </LinkContainer>
                                     <NavDropdown.Item onClick={handleLogout}>
-                                        Cerrar sesión
+                                        Sign out
                                     </NavDropdown.Item>
                                 </NavDropdown>
                             )}
@@ -45,12 +56,12 @@ const Header = () => {
                                 <LinkContainer to="/cart">
                                     <Nav.Link className="d-flex align-items-center">
                                         <FaShoppingCart style={{ marginRight: "5px" }} />
-                                        Carrito
+                                        Cart
                                     </Nav.Link>
                                 </LinkContainer>
                             )}
                             <LinkContainer to="/about">
-                                <Nav.Link>Acerca de</Nav.Link>
+                                <Nav.Link>About</Nav.Link>
                             </LinkContainer>
                         </Nav>
                     </Navbar.Collapse>

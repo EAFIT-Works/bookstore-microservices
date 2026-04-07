@@ -7,8 +7,8 @@ import Alert from "react-bootstrap/Alert";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 
-const Login = () => {
-    const { login } = useContext(AuthContext);
+const Register = () => {
+    const { register } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -18,17 +18,19 @@ const Login = () => {
         setLoading(true);
         setError("");
 
+        const firstName = e.target.firstName.value.trim();
+        const lastName = e.target.lastName.value.trim();
         const email = e.target.email.value.trim();
         const password = e.target.password.value;
 
         try {
-            await login(email, password);
+            await register({ email, password, firstName, lastName });
             navigate("/");
         } catch (err) {
             setError(
                 err.response?.data?.message ||
                     err.message ||
-                    "Could not sign in."
+                    "Could not register."
             );
         } finally {
             setLoading(false);
@@ -40,9 +42,9 @@ const Login = () => {
             className="d-flex justify-content-center align-items-center"
             style={{ minHeight: "80vh" }}
         >
-            <Card className="p-10 shadow rounded-4" style={{ width: "26rem" }}>
+            <Card className="p-10 shadow rounded-4" style={{ width: "28rem" }}>
                 <Card.Body>
-                    <h3 className="text-center mb-4">Sign in</h3>
+                    <h3 className="text-center mb-4">Create account</h3>
 
                     {error && (
                         <Alert variant="danger" className="py-2">
@@ -51,25 +53,41 @@ const Login = () => {
                     )}
 
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group className="mb-3" controlId="loginEmail">
+                        <Form.Group className="mb-3" controlId="regFirstName">
+                            <Form.Label>First name</Form.Label>
+                            <Form.Control
+                                name="firstName"
+                                required
+                                autoComplete="given-name"
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="regLastName">
+                            <Form.Label>Last name</Form.Label>
+                            <Form.Control
+                                name="lastName"
+                                required
+                                autoComplete="family-name"
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="regEmail">
                             <Form.Label>Email</Form.Label>
                             <Form.Control
                                 type="email"
                                 name="email"
-                                placeholder="you@example.com"
                                 required
                                 autoComplete="email"
                             />
                         </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="loginPassword">
+                        <Form.Group className="mb-3" controlId="regPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control
                                 type="password"
                                 name="password"
                                 required
-                                autoComplete="current-password"
+                                minLength={6}
+                                autoComplete="new-password"
                             />
+                            <Form.Text muted>At least 6 characters.</Form.Text>
                         </Form.Group>
 
                         <Button
@@ -78,12 +96,13 @@ const Login = () => {
                             className="w-100 mt-2 rounded-pill"
                             disabled={loading}
                         >
-                            {loading ? "Signing in…" : "Sign in"}
+                            {loading ? "Creating account…" : "Register"}
                         </Button>
                     </Form>
 
                     <p className="text-center mt-3 mb-0 text-muted small">
-                        No account? <Link to="/register">Register</Link>
+                        Already have an account?{" "}
+                        <Link to="/login">Sign in</Link>
                     </p>
                 </Card.Body>
             </Card>
@@ -91,4 +110,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;

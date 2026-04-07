@@ -45,7 +45,7 @@ const BookFormScreen = ({ mode }) => {
                 if (!cancelled) {
                     setError(
                         e.response?.data?.message ||
-                            "No se pudo cargar el libro."
+                            "Could not load book."
                     );
                 }
             } finally {
@@ -65,7 +65,7 @@ const BookFormScreen = ({ mode }) => {
         e.preventDefault();
         setError(null);
         if (!form.name.trim() || !form.author.trim()) {
-            setError("Nombre y autor son obligatorios.");
+            setError("Name and author are required.");
             return;
         }
         const payload = {
@@ -92,8 +92,8 @@ const BookFormScreen = ({ mode }) => {
             setError(
                 err.response?.data?.message ||
                     (isEdit
-                        ? "No se pudo actualizar el libro."
-                        : "No se pudo crear el libro.")
+                        ? "Could not update book."
+                        : "Could not create book.")
             );
         } finally {
             setSaving(false);
@@ -112,11 +112,11 @@ const BookFormScreen = ({ mode }) => {
         <>
             <div className="mb-4">
                 <Link to={isEdit ? `/book/${id}` : "/"}>
-                    <Button variant="light">← Volver</Button>
+                    <Button variant="light">← Back</Button>
                 </Link>
             </div>
 
-            <h2 className="mb-4">{isEdit ? "Editar libro" : "Nuevo libro"}</h2>
+            <h2 className="mb-4">{isEdit ? "Edit book" : "New book"}</h2>
 
             {error && (
                 <Alert variant="danger" dismissible onClose={() => setError(null)}>
@@ -128,7 +128,7 @@ const BookFormScreen = ({ mode }) => {
                 <Row>
                     <Col md={6}>
                         <Form.Group className="mb-3" controlId="name">
-                            <Form.Label>Nombre</Form.Label>
+                            <Form.Label>Title</Form.Label>
                             <Form.Control
                                 value={form.name}
                                 onChange={onChange("name")}
@@ -138,7 +138,7 @@ const BookFormScreen = ({ mode }) => {
                     </Col>
                     <Col md={6}>
                         <Form.Group className="mb-3" controlId="author">
-                            <Form.Label>Autor</Form.Label>
+                            <Form.Label>Author</Form.Label>
                             <Form.Control
                                 value={form.author}
                                 onChange={onChange("author")}
@@ -148,7 +148,7 @@ const BookFormScreen = ({ mode }) => {
                     </Col>
                 </Row>
                 <Form.Group className="mb-3" controlId="description">
-                    <Form.Label>Descripción</Form.Label>
+                    <Form.Label>Description</Form.Label>
                     <Form.Control
                         as="textarea"
                         rows={4}
@@ -159,7 +159,7 @@ const BookFormScreen = ({ mode }) => {
                 <Row>
                     <Col md={4}>
                         <Form.Group className="mb-3" controlId="price">
-                            <Form.Label>Precio</Form.Label>
+                            <Form.Label>Price</Form.Label>
                             <Form.Control
                                 type="number"
                                 step="any"
@@ -182,7 +182,7 @@ const BookFormScreen = ({ mode }) => {
                     </Col>
                     <Col md={4}>
                         <Form.Group className="mb-3" controlId="image">
-                            <Form.Label>URL de imagen</Form.Label>
+                            <Form.Label>Image URL</Form.Label>
                             <Form.Control
                                 type="url"
                                 placeholder="https://..."
@@ -193,7 +193,7 @@ const BookFormScreen = ({ mode }) => {
                     </Col>
                 </Row>
                 <Button type="submit" variant="primary" disabled={saving}>
-                    {saving ? "Guardando…" : isEdit ? "Guardar cambios" : "Crear libro"}
+                    {saving ? "Saving…" : isEdit ? "Save changes" : "Create book"}
                 </Button>
             </Form>
         </>
