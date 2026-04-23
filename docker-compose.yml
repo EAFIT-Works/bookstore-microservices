@@ -1,4 +1,96 @@
 services:
+  postgres-books:
+    image: postgres:16-alpine
+    container_name: bookstore_postgres_books
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bookstore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bookstore}
+      POSTGRES_DB: bookstore_books
+    volumes:
+      - postgres_books_data:/var/lib/postgresql/data
+    ports:
+      - "${BOOK_POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-bookstore} -d bookstore_books",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - back-tier
+
+  postgres-users:
+    image: postgres:16-alpine
+    container_name: bookstore_postgres_users
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bookstore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bookstore}
+      POSTGRES_DB: bookstore_users
+    volumes:
+      - postgres_users_data:/var/lib/postgresql/data
+    ports:
+      - "${USER_POSTGRES_PORT:-5433}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-bookstore} -d bookstore_users",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - back-tier
+
+  postgres-reviews:
+    image: postgres:16-alpine
+    container_name: bookstore_postgres_reviews
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bookstore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bookstore}
+      POSTGRES_DB: bookstore_reviews
+    volumes:
+      - postgres_reviews_data:/var/lib/postgresql/data
+    ports:
+      - "${REVIEW_POSTGRES_PORT:-5434}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-bookstore} -d bookstore_reviews",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - back-tier
+
+  postgres-orders:
+    image: postgres:16-alpine
+    container_name: bookstore_postgres_orders
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-bookstore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-bookstore}
+      POSTGRES_DB: bookstore_orders
+    volumes:
+      - postgres_orders_data:/var/lib/postgresql/data
+    ports:
+      - "${ORDER_POSTGRES_PORT:-5435}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-bookstore} -d bookstore_orders",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - back-tier
+
   book-service:
     build:
       context: ./backend/book-service
@@ -8,9 +100,11 @@ services:
       - path: .env
         required: false
     environment:
-      AWS_REGION: ${AWS_REGION:-us-east-1}
-      BOOKS_TABLE_NAME: ${BOOKS_TABLE_NAME:-tb_books}
+      DATABASE_URL: ${BOOK_DATABASE_URL:-postgresql://bookstore:bookstore@postgres-books:5432/bookstore_books}
       NODE_ENV: ${APP_NODE_ENV:-development}
+    depends_on:
+      postgres-books:
+        condition: service_healthy
     networks:
       - back-tier
 
@@ -23,10 +117,12 @@ services:
       - path: .env
         required: false
     environment:
-      AWS_REGION: ${AWS_REGION:-us-east-1}
-      USERS_TABLE_NAME: ${USERS_TABLE_NAME:-tb_users}
+      DATABASE_URL: ${USER_DATABASE_URL:-postgresql://bookstore:bookstore@postgres-users:5432/bookstore_users}
       NODE_ENV: ${APP_NODE_ENV:-development}
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+    depends_on:
+      postgres-users:
+        condition: service_healthy
     networks:
       - back-tier
 
@@ -39,9 +135,11 @@ services:
       - path: .env
         required: false
     environment:
-      AWS_REGION: ${AWS_REGION:-us-east-1}
-      REVIEWS_TABLE_NAME: ${REVIEWS_TABLE_NAME:-tb_reviews}
+      DATABASE_URL: ${REVIEW_DATABASE_URL:-postgresql://bookstore:bookstore@postgres-reviews:5432/bookstore_reviews}
       NODE_ENV: ${APP_NODE_ENV:-development}
+    depends_on:
+      postgres-reviews:
+        condition: service_healthy
     networks:
       - back-tier
 
@@ -54,12 +152,14 @@ services:
       - path: .env
         required: false
     environment:
-      AWS_REGION: ${AWS_REGION:-us-east-1}
-      ORDERS_TABLE_NAME: ${ORDERS_TABLE_NAME:-tb_orders}
+      DATABASE_URL: ${ORDER_DATABASE_URL:-postgresql://bookstore:bookstore@postgres-orders:5432/bookstore_orders}
       NODE_ENV: ${APP_NODE_ENV:-development}
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
       USER_SERVICE_URL: ${USER_SERVICE_URL:-http://user-service:3001}
       BOOK_SERVICE_URL: ${BOOK_SERVICE_URL:-http://book-service:3000}
+    depends_on:
+      postgres-orders:
+        condition: service_healthy
     networks:
       - back-tier
 
@@ -93,6 +193,12 @@ services:
     networks:
       - front-tier
       - back-tier
+
+volumes:
+  postgres_books_data:
+  postgres_users_data:
+  postgres_reviews_data:
+  postgres_orders_data:
 
 networks:
   front-tier:
