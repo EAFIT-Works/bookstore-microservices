@@ -1,0 +1,11 @@
+# EKS Auto Mode registra el driver como ebs.csi.eks.amazonaws.com (no ebs.csi.aws.com).
+# La StorageClass gp2 típica apunta al CSI antiguo y Auto Mode rechaza ese provisioner.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: eks-auto-ebs
+provisioner: ebs.csi.eks.amazonaws.com
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  type: gp3
+  encrypted: "true"

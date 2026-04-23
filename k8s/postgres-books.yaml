@@ -10,7 +10,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-  storageClassName: gp2
+  storageClassName: eks-auto-ebs
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -28,6 +28,8 @@ spec:
       labels:
         app.kubernetes.io/name: postgres-books
     spec:
+      securityContext:
+        fsGroup: 70
       containers:
         - name: postgres
           image: postgres:16-alpine
@@ -40,9 +42,12 @@ spec:
               value: bookstore
             - name: POSTGRES_DB
               value: bookstore_books
+            - name: POSTGRES_HOST_AUTH_METHOD
+              value: trust
           volumeMounts:
             - name: data
               mountPath: /var/lib/postgresql/data
+              subPath: pgdata
           readinessProbe:
             exec:
               command:
