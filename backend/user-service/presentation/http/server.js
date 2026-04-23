@@ -1,5 +1,5 @@
-import docClient from "../../infraestructure/config/dynamo.js";
-import { DynamoUserRepository } from "../../infraestructure/persistence/DynamoUserRepository.js";
+import { prisma } from "../../infraestructure/persistence/database.js";
+import { PrismaUserRepository } from "../../infraestructure/persistence/PrismaUserRepository.js";
 import CreateUserUseCase from "../../application/use-cases/createUserUseCase.js";
 import DeleteUserUseCase from "../../application/use-cases/deleteUserUseCase.js";
 import GetUserByIdUseCase from "../../application/use-cases/getUserByIdUseCase.js";
@@ -11,7 +11,7 @@ import RefreshTokenUseCase from "../../application/use-cases/refreshTokenUseCase
 import DebitBalanceUseCase from "../../application/use-cases/debitBalanceUseCase.js";
 import { createApp } from "./app.js";
 
-const userRepository = new DynamoUserRepository(docClient);
+const userRepository = new PrismaUserRepository(prisma);
 
 const createUserUseCase = new CreateUserUseCase(userRepository);
 const getUserByIdUseCase = new GetUserByIdUseCase(userRepository);
