@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: YOUR_ECR_REGISTRY/api-gateway:latest
+          image: 240218516941.dkr.ecr.us-east-1.amazonaws.com/bookstore/api-gateway:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -31,7 +31,7 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-type: external
     service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
     service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
-    service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-PUBLIC_A,subnet-PUBLIC_B,subnet-PUBLIC_C
+    service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-04b1fb2ba4421feb7,subnet-0ebd3c9947e478d1d
 spec:
   type: LoadBalancer
   selector:

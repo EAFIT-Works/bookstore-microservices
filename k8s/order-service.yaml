@@ -14,15 +14,22 @@ spec:
       labels:
         app.kubernetes.io/name: order-service
     spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - until nc -z postgres-orders 5432; do sleep 2; done
       containers:
         - name: order-service
-          image: YOUR_ECR_REGISTRY/order-service:latest
+          image: 240218516941.dkr.ecr.us-east-1.amazonaws.com/bookstore/order-service:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 3003
           env:
             - name: DATABASE_URL
-              value: postgresql://bookstore:bookstore@postgres-orders:5432/bookstore_orders
+              value: postgresql://bookstore:bookstore@postgres-orders:5432/bookstore_orders?sslmode=disable
             - name: NODE_ENV
               value: production
             - name: JWT_SECRET
