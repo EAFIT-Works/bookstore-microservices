@@ -1,5 +1,5 @@
-import docClient from "../../infraestructure/config/dynamo.js";
-import { DynamoBookRepository } from "../../infraestructure/persistence/DynamoBookRepository.js";
+import { prisma } from "../../infraestructure/persistence/database.js";
+import { PrismaBookRepository } from "../../infraestructure/persistence/PrismaBookRepository.js";
 import CreateBookUseCase from "../../application/use-cases/createBookUseCase.js";
 import DeleteBookUseCase from "../../application/use-cases/deleteBookUseCase.js";
 import GetBookByIdUseCase from "../../application/use-cases/getBookByIdUseCase.js";
@@ -7,7 +7,7 @@ import GetBooksUseCase from "../../application/use-cases/getBooksUseCase.js";
 import UpdateBookUseCase from "../../application/use-cases/updateBookUseCase.js";
 import { createApp } from "./app.js";
 
-const bookRepository = new DynamoBookRepository(docClient);
+const bookRepository = new PrismaBookRepository(prisma);
 
 const deps = {
     createBookUseCase: new CreateBookUseCase(bookRepository),
