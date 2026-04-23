@@ -1,11 +1,11 @@
-import docClient from "../../infraestructure/config/dynamo.js";
-import { DynamoOrderRepository } from "../../infraestructure/persistence/DynamoOrderRepository.js";
+import { prisma } from "../../infraestructure/persistence/database.js";
+import { PrismaOrderRepository } from "../../infraestructure/persistence/PrismaOrderRepository.js";
 import CreateOrderUseCase from "../../application/use-cases/createOrderUseCase.js";
 import ListOrdersByUserUseCase from "../../application/use-cases/listOrdersByUserUseCase.js";
 import CheckoutUseCase from "../../application/use-cases/checkoutUseCase.js";
 import { createApp } from "./app.js";
 
-const orderRepository = new DynamoOrderRepository(docClient);
+const orderRepository = new PrismaOrderRepository(prisma);
 const createOrderUseCase = new CreateOrderUseCase(orderRepository);
 
 const deps = {

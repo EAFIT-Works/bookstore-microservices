@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "prisma": {
+    "schema": "infraestructure/persistence/prisma/schema.prisma"
+  },
   "scripts": {
-    "start": "node presentation/http/server.js"
+    "start": "node presentation/http/server.js",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.758.0",
-    "@aws-sdk/lib-dynamodb": "^3.758.0",
+    "@prisma/client": "^6.3.0",
     "express": "^4.21.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^6.3.0"
   }
 }
