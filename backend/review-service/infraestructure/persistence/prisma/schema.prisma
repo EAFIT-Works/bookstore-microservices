@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Review {
+  bookId    String
+  id        String
+  userId    String   @map("user_id")
+  rating    Int
+  comment   String?
+  createdAt DateTime @map("created_at")
+
+  @@id([bookId, id])
+  @@index([bookId])
+  @@map("reviews")
+}
