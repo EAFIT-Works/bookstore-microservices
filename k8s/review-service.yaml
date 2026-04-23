@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: review-service
+  labels:
+    app.kubernetes.io/name: review-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: review-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: review-service
+    spec:
+      containers:
+        - name: review-service
+          image: YOUR_ECR_REGISTRY/review-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3002
+          env:
+            - name: DATABASE_URL
+              value: postgresql://bookstore:bookstore@postgres-reviews:5432/bookstore_reviews
+            - name: NODE_ENV
+              value: production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: review-service
+  labels:
+    app.kubernetes.io/name: review-service
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: review-service
+  ports:
+    - port: 3002
+      targetPort: 3002

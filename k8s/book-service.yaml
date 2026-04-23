@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: book-service
+  labels:
+    app.kubernetes.io/name: book-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: book-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: book-service
+    spec:
+      containers:
+        - name: book-service
+          image: YOUR_ECR_REGISTRY/book-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: postgresql://bookstore:bookstore@postgres-books:5432/bookstore_books
+            - name: NODE_ENV
+              value: production
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: book-service
+  labels:
+    app.kubernetes.io/name: book-service
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: book-service
+  ports:
+    - port: 3000
+      targetPort: 3000
